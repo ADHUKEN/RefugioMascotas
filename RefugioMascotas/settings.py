@@ -105,6 +105,11 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+
+    {'NAME': 'RefugioMascotas.customPassword.NumberValidator', },
+    {'NAME': 'RefugioMascotas.customPassword.UppercaseValidator', },
+    {'NAME': 'RefugioMascotas.customPassword.LowercaseValidator', },
+    {'NAME': 'RefugioMascotas.customPassword.SymbolValidator', },
 ]
 
 

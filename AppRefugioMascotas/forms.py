@@ -16,6 +16,7 @@ class RegisterUserForm(UserCreationForm):
     email = forms.EmailField()
     first_name = forms.CharField(max_length=50)
     last_name = forms.CharField(max_length=50)
+    
     class Meta:
         model = User
         fields = ('username','first_name','last_name','email','password1','password2', 'image')
@@ -38,6 +39,7 @@ class adoptionForm(ModelForm):
         
         widgets = {
             'user': forms.TextInput(attrs={'class': '', 'readonly ': ''}),
+            'firstName': forms.PasswordInput(),
 
         }
         

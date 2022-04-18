@@ -7,3 +7,4 @@ from .models import Adoption
 admin.site.register(User)
 admin.site.register(Pets)
 admin.site.register(Adoption)
+
