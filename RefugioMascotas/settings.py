@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import os
 from pathlib import Path
+from pickle import TRUE
 
 from matplotlib import path
 
@@ -28,6 +29,10 @@ SECRET_KEY = 'django-insecure-u2zd#-kodpgxsfu+a!n8=ku5d5t%8ur^m9fina1%o4mzzptr8f
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    
+
 ALLOWED_HOSTS = ['*']
 
 
@@ -41,6 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'AppRefugioMascotas.apps.ApprefugiomascotasConfig',
+    "captcha"
+    
 ]
 
 MIDDLEWARE = [
@@ -143,3 +150,13 @@ STATICFILES_DIRS = (
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'AppRefugioMascotas.User'
+
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'refugio.mascotas.2619@gmail.com'
+EMAIL_HOST_PASSWORD = 'MLYE7M3m'

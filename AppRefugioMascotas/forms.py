@@ -1,7 +1,7 @@
 from dataclasses import fields
 import email
 from faulthandler import disable
-from cv2 import resize
+from cv2 import CAP_PVAPI_DECIMATION_2OUTOF16, resize
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
@@ -9,6 +9,7 @@ from django.contrib.auth import get_user_model
 from matplotlib import widgets
 from .models import Pets, User, Adoption
 from django.forms import ModelForm
+from captcha.fields import CaptchaField
 
 User = get_user_model()
 
@@ -42,4 +43,11 @@ class adoptionForm(ModelForm):
             'firstName': forms.PasswordInput(),
 
         }
-        
+
+class captchaform(forms.Form):
+    captcha = CaptchaField()
+
+class verifyUser(forms.Form):
+    number = forms.CharField(label='Code')
+    class Meta:
+        fields = ('number')

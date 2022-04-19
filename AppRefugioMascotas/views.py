@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login,logout ,get_user_model
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
 
 
 from django.http import HttpResponse
@@ -13,33 +14,75 @@ from requests import request
 
 from .models import Pets, User, Adoption
 
-from .forms import RegisterUserForm, addPetForm , adoptionForm
+from .forms import RegisterUserForm, addPetForm , adoptionForm, captchaform, verifyUser
 
 # Create your views here.
 User = get_user_model()
 
-
 def home(request):
     return render(request, 'index.html')
 
-def loginUser(request):
+def loginUser( request):
     if request.method == "POST":
         username = request.POST['userTextbox']
         password = request.POST['passwordTextbox']
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, username=username, password=password)        
+             
         if user is not None:
-            login(request, user)
+            request.session['pk'] = user.pk
             # Redirect to a success page.
-            messages.success(request, "Bienvenido cliente")
-            return redirect('Inicio')
-        else:
-            # Return an 'invalid login' error message.
-            messages.success(request, "Usuario o contraseña invalidos")  
-            return redirect('login')
-            
+            return redirect('verify')
+
+        else: 
+            if User.objects.filter(username=username).exists():
+                print()
+                if User.objects.get(username=username).is_active == False:
+                    messages.success(request, "usuario bloqueado")
+                else:
+                    messages.success(request, "Contraseña incorrecta")
+                
+            # Return an 'invalid login' error message.                
+                if request.session.get('count', 0) == 0:
+                    request.session['count'] = 1
+                    print(request.session['count'])
+                else:
+                    request.session['count'] += 1
+                    print(request.session['count'])
+            else:
+                messages.success(request, "Usuario inexistente")
+                
+            if request.session.get('count', 0) >= 6:
+                userGetname = User.objects.get(username=username)              
+                userGetname.is_active = False
+                userGetname.save()
+                messages.success(request, "Usted ha sido baneaado por fallar 6 veces la contraseña") 
+                
+            elif request.session.get('count', 0) == 3:
+                return redirect('captcha')
+            return redirect('login')                    
     else:
         return render(request, 'login.html')
     
+def verify(request):
+    form = verifyUser(request.POST or None)
+    pk = request.session.get('pk')
+    print(pk)
+    if pk:
+        user = User.objects.get(pk= pk)
+        if form.is_valid():
+            num = form.cleaned_data.get('number')
+            
+            if user.last_name == num:
+                login(request, user)
+                messages.success(request, "Bienvenido cliente")
+                return redirect('Inicio')
+            else:
+                messages.success(request, "Incorrecto")
+                return redirect('verify')
+            
+    return render(request, 'verifyUser.html', {'form':form,})
+    
+
 def logoutUser(request):
     logout(request)
     messages.success(request, "Adiooooos")
@@ -56,6 +99,17 @@ def registerUser(request):
     else:
         form = RegisterUserForm()
     return render(request, 'register.html', {'form':form,})
+
+def captcha(request):
+    if request.method == "POST":
+        form = captchaform(request.POST)
+        if form.is_valid():
+            messages.success(request, "Correcto")
+            return redirect('login')
+        else:
+            messages.success(request, "Incorrecto")
+    form = captchaform()
+    return render(request, 'captcha.html', {'form':form,})
 
 
 def viewPet(request):
@@ -114,7 +168,6 @@ def updateProfile(request, Profile_id):
         return redirect('Inicio')
     
     return render(request, 'updateProfile.html', {'Profile':Profile, 'form':form})
-
 
 
 def adoptionRequest(request):
