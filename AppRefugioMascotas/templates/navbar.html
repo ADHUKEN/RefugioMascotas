@@ -10,46 +10,57 @@
 
 
         <li class="nav-item dropdown">
-          <a class="nav-link  active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-            aria-expanded="false">
+          <a class="nav-link  active dropdown-toggle" href="#" id="navbarDropdown" role="button"
+            data-bs-toggle="dropdown" aria-expanded="false">
             Mascotas
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="{% url 'viewPet' %}">Ver</a></li>
             <li><a class="dropdown-item" href="{% url 'adoptionRequest' %}">Solicitud de adopción</a></li>
+
+
+            {% if user.is_authenticated and user.is_staff %}
             <li>
               <hr class="dropdown-divider">
             </li>
             <li><a class="dropdown-item" href="{% url 'addPet' %}">Ingresar Mascota</a></li>
+            {% else %}
+            {% endif %}
           </ul>
         </li>
 
 
+        {% if user.is_authenticated and user.is_staff %}
+
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{% url 'viewAdoption' %}">Solicitudes</a>
         </li>
+        {% else %}
+        {% endif %}
 
-       
-
+        {% if user.is_authenticated and user.is_staff %}
         <li class="nav-item">
           <a class="nav-link active" href="{% url 'viewClient' %}">Clientes</a>
         </li>
-
-
-
-
-
-
+        {% else %}
+        {% endif %}
+        {% if user.is_authenticated and user.is_superuser %}
         <li class="nav-item">
-          <a class="nav-link disabled">Disabled</a>
+          <a class="btn btn-success me-2" href="{% url 'admin:index' %}">Admin Django</a>
         </li>
-     
- </ul>
+        {% else %}
+        {% endif %}
 
- 
+
+
+
+
+      </ul>
+
+
       {% if user.is_authenticated %}
 
-        <a class="nav-link active text-white me-2" >Hola, {{ user }}</a>
+      <a class="nav-link active text-white me-2">Hola, {{ user }}</a>
 
       <a class="btn btn-outline-secondary me-1" href="{% url 'updateProfile' user.id %}">Editar Perfil</a>
       <a class="btn btn-outline-secondary" href="{% url 'logout' %}">Logout</a>

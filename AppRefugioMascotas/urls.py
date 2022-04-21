@@ -1,8 +1,9 @@
 from unicodedata import name
 from urllib.parse import urlparse
 from django.urls import path
-from . import views
+from . import views 
 from django.contrib.auth import views as authViews
+import RefugioMascotas
 
 urlpatterns = [
     path('', views.home, name='Inicio'),
@@ -21,6 +22,7 @@ urlpatterns = [
     path('viewAdoption', views.viewAdoption, name='viewAdoption'),
     path('deleteAdoption/<Adoption_id>', views.deleteAdoption, name='deleteAdoption'),
     path('updateAdoption/<Adoption_id>', views.updateAdoption, name='updateAdoption'),
+    
     
     #? passsword reset email
     

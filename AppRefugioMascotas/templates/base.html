@@ -13,6 +13,14 @@
 
 <body>
     {% include 'navbar.html' %}
+    <style>
+        .center-form {
+          width: 100%;
+          max-width: 430px;
+          padding: 15px;
+          margin: auto;
+        }
+        </style>
     <div class="container">
         {% if messages %}
         {% for message in messages %}

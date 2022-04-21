@@ -3,17 +3,38 @@
 {% block content%}
 
 
-
-
 <div class="shadow p-3 mb-5 bg-body rounded">
-    <h1>Verificacion</h1>
+    <h1>Verificacion de rostro</h1>
+    <p>Cuando estes listo click en Iniciar, asegurate de acercarte bien a la camara</p>
+    <div class="spinner-grow text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="spinner-grow text-secondary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="spinner-grow text-success" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="spinner-grow text-danger" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="spinner-grow text-warning" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="spinner-grow text-info" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+
+      <div class="spinner-grow text-dark" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
     <form action="" method="POST" enctype="multipart/form-data">
        
         {% csrf_token %}
         
         {{form.as_p }}
     </br>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Iniciar</button>
     </form>
 </div>
 {% endblock %}

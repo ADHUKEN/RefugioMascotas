@@ -1,3 +1,4 @@
+from django.conf import settings
 from tabnanny import verbose
 from unicodedata import name
 from django.db import models
@@ -62,3 +63,11 @@ class Adoption(models.Model):
     
     def __str__(self):
         return self.user
+
+class FailedLogin(models.Model):
+    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE, db_column='username')
+    times = models.IntegerField('Times', default='0')
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+   

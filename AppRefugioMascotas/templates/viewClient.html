@@ -9,18 +9,21 @@
 </style>
 
 <h1>Clientes</h1>    
-    {{attr}}
     <div class="table-responsive">
     <table class="table table-hover table-sm table-responsive">
         <thead>
             <tr>
                 <th scope="col">Id</th>
                 <th scope="col">Usuario</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Apellido</th>
+                <th scope="col">Nombre Completo</th>
                 <th scope="col">Email</th>
-                <th scope="col">Adoptante</th>
-                <th scope="col"></th>
+                {% if user.is_authenticated and user.is_superuser %}
+
+                <th scope="col">Superususario</th>
+                <th scope="col">Colaborador</th>
+                <th scope="col">Cliente</th>
+                {% else %}
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -30,14 +33,20 @@
             
             
             
+            
             <tr>
                 <th scope="row">{{client.id}}</th>
                 <td>{{client.username}}</td>
                 <td>{{client.get_full_name}}</td>
                 <td>{{client.email}}</td>
+
+                {% if user.is_authenticated and user.is_superuser %}
+
                 <td>{{client.is_superuser}}</td>
                 <td>{{client.is_staff}}</td>
                 <td>{{client.is_active}}</td>
+                {% else %}
+                {% endif %}
 
                 <td><a  class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal{{client.id}}">Eliminar</a></td>
             </tr>

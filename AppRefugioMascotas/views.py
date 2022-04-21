@@ -1,5 +1,7 @@
 from contextlib import redirect_stderr
 from email import message
+from email.policy import default
+from genericpath import exists
 import django
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -8,14 +10,20 @@ from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 
+from django.contrib.auth import get_user_model
+from django.contrib.auth.signals import user_logged_in, user_login_failed
+from django.dispatch import receiver
 
 from django.http import HttpResponse
 from requests import request
+from scipy.misc import face
 
-from .models import Pets, User, Adoption
+from .models import Pets, User, Adoption, FailedLogin
 
 from .forms import RegisterUserForm, addPetForm , adoptionForm, captchaform, verifyUser
 
+
+from .FaceDeteccion.FaceDeteccion  import CAPTURANDO , ENTRENANDO,RECONOCIENDO 
 # Create your views here.
 User = get_user_model()
 
@@ -28,57 +36,55 @@ def loginUser( request):
         password = request.POST['passwordTextbox']
         user = authenticate(request, username=username, password=password)        
              
+        try:
+            exist = User.objects.get(username=username)
+        except:
+            messages.success(request, "Usuario inexistente")
         if user is not None:
+            FailedLogin.objects.filter(user = exist).delete()
             request.session['pk'] = user.pk
             # Redirect to a success page.
+            
             return redirect('verify')
 
         else: 
+            
             if User.objects.filter(username=username).exists():
-                print()
+                print(username)
                 if User.objects.get(username=username).is_active == False:
                     messages.success(request, "usuario bloqueado")
                 else:
+                    
+                    try:
+                        failex =FailedLogin.objects.get(user=exist)
+                        failex.times += 1
+                        failex.save()
+                        print(FailedLogin.objects.get(user=exist).times)
+                        if FailedLogin.objects.get(user=exist).times >= 6:
+                            # three tries or more, disactivate the user
+                            exist.is_active = False
+                            exist.save()
+                        elif FailedLogin.objects.get(user=exist).times == 3:
+                            return redirect('captcha')
+                    except:
+                        FailedLogin.objects.create(user=exist, times = 1)
+                        
                     messages.success(request, "Contraseña incorrecta")
-                
-            # Return an 'invalid login' error message.                
-                if request.session.get('count', 0) == 0:
-                    request.session['count'] = 1
-                    print(request.session['count'])
-                else:
-                    request.session['count'] += 1
-                    print(request.session['count'])
-            else:
-                messages.success(request, "Usuario inexistente")
-                
-            if request.session.get('count', 0) >= 6:
-                userGetname = User.objects.get(username=username)              
-                userGetname.is_active = False
-                userGetname.save()
-                messages.success(request, "Usted ha sido baneaado por fallar 6 veces la contraseña") 
-                
-            elif request.session.get('count', 0) == 3:
-                return redirect('captcha')
-            return redirect('login')                    
-    else:
-        return render(request, 'login.html')
+    return render(request, 'login.html')
     
+
 def verify(request):
     form = verifyUser(request.POST or None)
     pk = request.session.get('pk')
     print(pk)
     if pk:
         user = User.objects.get(pk= pk)
+                
         if form.is_valid():
-            num = form.cleaned_data.get('number')
-            
-            if user.last_name == num:
-                login(request, user)
-                messages.success(request, "Bienvenido cliente")
-                return redirect('Inicio')
-            else:
-                messages.success(request, "Incorrecto")
-                return redirect('verify')
+            ENTRENANDO(user.username)
+            RECONOCIENDO()
+            login(request,user)
+            return redirect('Inicio')
             
     return render(request, 'verifyUser.html', {'form':form,})
     
@@ -95,6 +101,8 @@ def registerUser(request):
             user = form.save()
             messages.success(request, "registrado")
             login(request,user)
+            username = request.user.username
+            CAPTURANDO(username)
             return redirect('Inicio')
     else:
         form = RegisterUserForm()
@@ -147,9 +155,13 @@ def deletePet(request, pet_id):
 
 
 def viewClient(request):
-    Client_list = User.objects.all()
-    attr= dir(User)
-    return render(request, 'viewClient.html', {'Client_list':Client_list, 'attr':attr})
+    user = request.user
+    if user.is_authenticated and user.is_superuser :
+        Client_list = User.objects.all()
+    else :
+        Client_list = User.objects.filter(is_staff=False, is_superuser=False)
+
+    return render(request, 'viewClient.html', {'Client_list':Client_list})
 
 
 
@@ -164,6 +176,8 @@ def updateProfile(request, Profile_id):
     if form.is_valid():
         user =form.save()
         login(request,user)
+        username = request.user.username
+        CAPTURANDO(username)
         messages.success(request, "Información actualizada")
         return redirect('Inicio')
     
@@ -185,8 +199,8 @@ def adoptionRequest(request):
 
 def viewAdoption(request):
     adoption_list = Adoption.objects.all()
-    attr= dir(Adoption)
-    return render(request, 'viewAdoption.html', {'adoption_list':adoption_list, 'attr':attr})
+
+    return render(request, 'viewAdoption.html', {'adoption_list':adoption_list})
 
 
 def deleteAdoption(request, Adoption_id):

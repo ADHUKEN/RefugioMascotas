@@ -14,22 +14,40 @@ from captcha.fields import CaptchaField
 User = get_user_model()
 
 class RegisterUserForm(UserCreationForm):
-    email = forms.EmailField()
-    first_name = forms.CharField(max_length=50)
-    last_name = forms.CharField(max_length=50)
-    
+
     class Meta:
         model = User
         fields = ('username','first_name','last_name','email','password1','password2', 'image')
         
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'password1': forms.TextInput(attrs={'class': 'form-control'}),
+            'password2': forms.PasswordInput(attrs={'class': 'form-control'}),
+            'image': forms.FileInput(attrs={'class': 'form-control'}),
+
+        }
+         
 class addPetForm(ModelForm):
     class Meta:
         model = Pets
-        fields = ('species','name','sex','breed','age','vaccination','illness','feeding','rescue_date','description','adopter','image')
+        fields = ('species','name','sex','breed','age','vaccination','illness','feeding','rescue_date','adopter','image','description')
         
         widgets = {
-            'rescue_date': forms.DateInput(attrs={'class': '', 'type': 'date'}),
-            'description': forms.Textarea(attrs={'class': 'form-control','rows':'3', })
+            'species': forms.TextInput(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'sex': forms.Select(attrs={'class': 'form-control'}),
+            'breed': forms.TextInput(attrs={'class': 'form-control'}),
+            'age': forms.NumberInput(attrs={'class': 'form-control'}),
+            'vaccination': forms.Textarea(attrs={'class': 'form-control','rows':'3' }),
+            'illness': forms.Textarea(attrs={'class': 'form-control','rows':'2' }),
+            'feeding': forms.Textarea(attrs={'class': 'form-control','rows':'2' }),
+            'rescue_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'adopter': forms.Select(attrs={'class': 'form-control'}),
+            'image': forms.FileInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control','rows':'3', }),
         }
                 
 
@@ -39,8 +57,16 @@ class adoptionForm(ModelForm):
         fields = ('user','firstName','lastName','email','phone','age','addreses','Pet','reason','otherPets')
         
         widgets = {
-            'user': forms.TextInput(attrs={'class': '', 'readonly ': ''}),
-            'firstName': forms.PasswordInput(),
+            'user': forms.TextInput(attrs={'class': 'form-control', 'readonly ': ''}),
+            'firstName': forms.TextInput(attrs={'class': 'form-control' }),
+            'lastName': forms.TextInput(attrs={'class': 'form-control' }),
+            'email': forms.EmailInput(attrs={'class': 'form-control' }),
+            'phone': forms.NumberInput(attrs={'class': 'form-control' }),
+            'age': forms.NumberInput(attrs={'class': 'form-control' }),
+            'addreses': forms.TextInput(attrs={'class': 'form-control' }),
+            'Pet': forms.Select(attrs={'class': 'form-control' }),
+            'reason': forms.Textarea(attrs={'class': 'form-control','rows':'3' }),
+            'otherPets': forms.Textarea(attrs={'class': 'form-control','rows':'3' }),
 
         }
 
@@ -48,6 +74,4 @@ class captchaform(forms.Form):
     captcha = CaptchaField()
 
 class verifyUser(forms.Form):
-    number = forms.CharField(label='Code')
-    class Meta:
-        fields = ('number')
+    pass
