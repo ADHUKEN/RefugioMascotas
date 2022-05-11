@@ -1,0 +1,88 @@
+<!DOCTYPE >
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mascotas disponibles</title>
+        <style type="text/css">
+            body {
+                font-weight: 200;
+                font-size: 14px;
+            }
+            .header {
+                font-size: 20px;
+                font-weight: 100;
+                text-align: center;
+                color: #007cae;
+            }
+            .title {
+                font-size: 22px;
+                font-weight: 100;
+               /* text-align: right;*/
+               padding: 10px 20px 0px 20px;  
+            }
+            .title span {
+                color: #007cae;
+            }
+            .details {
+                border: 1px solid #dddddd;
+                padding: 5px 5px 0px 20px;
+                text-align: left !important;
+                /*margin-left: 40%;*/
+            }
+            .hrItem {
+                border: none;
+                height: 1px;
+                /* Set the hr color */
+                color: #333; /* old IE */
+                background-color: #fff; /* Modern Browsers */
+            }
+            img {
+                height: 250px;
+            }
+
+
+        </style>
+    </head>
+    <body>
+        <div class='wrapper'>
+            <div class='header'>
+                <p class='title'>Mascotas Disponibles </p>
+            </div>
+        <div>
+
+            {% for pet in  pet_list%}
+
+            <div class='details'>
+
+            <table >
+                <tr><td><strong> Especie:          </strong></td><td>    {{pet.species}}      </td></tr>    
+                <tr><td><strong> Nombre:           </strong></td><td>    {{pet.name}}         </td></tr>
+                <tr><td><strong> Sexo:             </strong></td><td>    {{pet.sex}}          </td></tr>
+                <tr><td><strong> Raza:             </strong></td><td>    {{pet.breed}}        </td></tr>    
+                <tr><td><strong> Edad:             </strong></td><td>    {{pet.age}}          </td></tr>
+                <tr><td><strong> Vacunación:       </strong></td><td>    {{pet.vaccination}}  </td></tr>        
+                <tr><td><strong> Enfermedades:     </strong></td><td>    {{pet.illness}}      </td></tr>    
+                <tr><td><strong> Alimentación:     </strong></td><td>    {{pet.feeding}}      </td></tr>    
+                <tr><td><strong> Fecha de rescate: </strong></td><td>    {{pet.rescue_date}}  </td></tr>        
+                <tr><td><strong> Descripción:      </strong></td><td>    {{pet.description}}  </td></tr> 
+
+                {% if user.is_authenticated and user.is_staff %}
+
+                <tr><td><strong> Adoptante:        </strong></td><td>    {{pet.adopter}}<br/>     </td></tr>        
+                {% else %}
+                {% endif %}       
+           </table>
+
+                <img src="media/{{pet.image}}"  >
+                <hr class='hrItem' />
+            </div>
+
+
+            {% endfor %}
+
+    </div>
+    </body>
+</html>
+

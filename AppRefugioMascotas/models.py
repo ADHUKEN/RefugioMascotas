@@ -3,8 +3,8 @@ from tabnanny import verbose
 from unicodedata import name
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from simple_history.models import HistoricalRecords
 
-# Create your models here.
 
 
 class User(AbstractUser):
@@ -17,6 +17,7 @@ class User(AbstractUser):
 
     role = models.CharField(max_length=300, choices=CHOICES, default='client',)
     image = models.ImageField(default='default.jpg', upload_to='profile_pics', verbose_name='Foto de perfil')
+    history = HistoricalRecords()
 
 
 class Pets(models.Model):
@@ -41,6 +42,7 @@ class Pets(models.Model):
     
     #adopter = models.OneToOneField('Adoptante' , max_length=50)
     image = models.ImageField(default='pet.jpg', upload_to='pet_pics' , verbose_name='Foto')
+    history = HistoricalRecords()
 
 
     def __str__(self):
@@ -60,6 +62,7 @@ class Adoption(models.Model):
     Pet = models.OneToOneField(Pets, verbose_name='Mascota' ,blank=False, null=False, on_delete=models.CASCADE)
     reason = models.CharField('Motivo para adoptar', max_length=150)
     otherPets = models.CharField('Otras Mascotas', max_length=150,blank=True)
+    history = HistoricalRecords()
     
     def __str__(self):
         return self.user
@@ -69,5 +72,10 @@ class FailedLogin(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE, db_column='username')
     times = models.IntegerField('Times', default='0')
     timestamp = models.DateTimeField(auto_now_add=True)
+    history = HistoricalRecords()
 
-   
+
+def add_history_ip_address(sender, **kwargs):
+    history_instance = kwargs['history_instance']
+    # context.request for use only when the simple_history middleware is on and enabled
+    history_instance.ip_address = HistoricalRecords.context.request.META['REMOTE_ADDR']

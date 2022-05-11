@@ -1,0 +1,82 @@
+<!DOCTYPE >
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mascotas disponibles</title>
+        <style type="text/css">
+            body {
+                font-weight: 200;
+                font-size: 14px;
+            }
+            .header {
+                font-size: 20px;
+                font-weight: 100;
+                text-align: center;
+                color: #007cae;
+            }
+            .title {
+                font-size: 22px;
+                font-weight: 100;
+               /* text-align: right;*/
+               padding: 10px 20px 0px 20px;  
+            }
+            .title span {
+                color: #007cae;
+            }
+            .details {
+                border: 1px solid #dddddd;
+                padding: 5px 5px 0px 20px;
+                text-align: left !important;
+                /*margin-left: 40%;*/
+            }
+            .hrItem {
+                border: none;
+                height: 1px;
+                /* Set the hr color */
+                color: #333; /* old IE */
+                background-color: #fff; /* Modern Browsers */
+            }
+            img {
+                height: 250px;
+            }
+
+
+        </style>
+    </head>
+    <body>
+        <div class='wrapper'>
+            <div class='header'>
+                <p class='title'>Solicitud de adopciones</p>
+            </div>
+        <div>
+
+            {% for adoption in  adoption_list%}
+
+            <div class='details'>
+
+            <table >
+                <tr><td><strong> Usuario:          </strong></td><td>    {{adoption.user}}      </td></tr>    
+                <tr><td><strong> Nombre:           </strong></td><td>    {{adoption.firstName}}         </td></tr>
+                <tr><td><strong> Apellido:             </strong></td><td>    {{adoption.lastName}}          </td></tr>
+                <tr><td><strong> Email:             </strong></td><td>    {{adoption.email}}        </td></tr>    
+                <tr><td><strong> Teléfono:             </strong></td><td>    {{adoption.phone}}          </td></tr>
+                <tr><td><strong> Edad:       </strong></td><td>    {{adoption.age}}  </td></tr>        
+                <tr><td><strong> Dirección:     </strong></td><td>    {{adoption.addreses}}      </td></tr>    
+                <tr><td><strong> Mascota:     </strong></td><td>    {{adoption.Pet}}      </td></tr>    
+                <tr><td><strong> Razón para adoptar: </strong></td><td>    {{adoption.reason}}  </td></tr>        
+                <tr><td><strong> Otras mascotas:      </strong></td><td>    {{adoption.otherPets}}  </td></tr> 
+    
+           </table>
+           <hr class='hrItem' />
+
+            </div>
+
+
+            {% endfor %}
+
+    </div>
+    </body>
+</html>
+

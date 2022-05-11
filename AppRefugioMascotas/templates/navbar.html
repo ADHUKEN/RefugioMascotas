@@ -44,6 +44,12 @@
         </li>
         {% else %}
         {% endif %}
+        {% if user.is_authenticated and user.is_staff %}
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'acctionsHistoryAdoptions' %}">Acciones</a>
+        </li>
+        {% else %}
+        {% endif %}
         {% if user.is_authenticated and user.is_superuser %}
         <li class="nav-item">
           <a class="btn btn-success me-2" href="{% url 'admin:index' %}">Admin Django</a>

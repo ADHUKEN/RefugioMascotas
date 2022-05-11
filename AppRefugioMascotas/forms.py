@@ -18,17 +18,7 @@ class RegisterUserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username','first_name','last_name','email','password1','password2', 'image')
-        
-        widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
-            'password1': forms.TextInput(attrs={'class': 'form-control'}),
-            'password2': forms.PasswordInput(attrs={'class': 'form-control'}),
-            'image': forms.FileInput(attrs={'class': 'form-control'}),
 
-        }
          
 class addPetForm(ModelForm):
     class Meta:
@@ -36,18 +26,12 @@ class addPetForm(ModelForm):
         fields = ('species','name','sex','breed','age','vaccination','illness','feeding','rescue_date','adopter','image','description')
         
         widgets = {
-            'species': forms.TextInput(attrs={'class': 'form-control'}),
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'sex': forms.Select(attrs={'class': 'form-control'}),
-            'breed': forms.TextInput(attrs={'class': 'form-control'}),
-            'age': forms.NumberInput(attrs={'class': 'form-control'}),
-            'vaccination': forms.Textarea(attrs={'class': 'form-control','rows':'3' }),
-            'illness': forms.Textarea(attrs={'class': 'form-control','rows':'2' }),
-            'feeding': forms.Textarea(attrs={'class': 'form-control','rows':'2' }),
-            'rescue_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'adopter': forms.Select(attrs={'class': 'form-control'}),
-            'image': forms.FileInput(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control','rows':'3', }),
+
+            'vaccination': forms.Textarea(attrs={'rows':'3' }),
+            'illness': forms.Textarea(attrs={'rows':'2' }),
+            'feeding': forms.Textarea(attrs={'rows':'2' }),
+            'rescue_date': forms.DateInput(attrs={'placeholder':'dd/mm/yyyy', 'onload': 'getDate()'}),
+            'description': forms.Textarea(attrs={'rows':'3', }),
         }
                 
 

@@ -1,0 +1,66 @@
+
+{% extends 'base.html'%}
+{% block content%}
+<style>
+    .img {
+        object-fit: cover;
+        height: 250px;
+    }
+</style>
+
+<h1>Hisotrial de acciones</h1>   
+<h2>Mascotas</h2>   
+
+{% if user.is_authenticated and user.is_staff %}
+<div style="text-align: right;">
+
+  <a  href= "{% url 'acctionsHistoryAdoptions' %}" class="btn btn-sm btn-secondary">Historial Adopciones</a>
+  <a  href= "{% url 'acctionsHistoryPdf' %}" class="btn btn-sm btn-secondary">Generar PDF</a>
+</div>
+{% else %}
+{% endif %}  
+    {{attr}}
+    <div class="table-responsive">
+    <table class="table table-light table-hover table-sm table-responsive table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Fecha de accion</th>
+                <th scope="col">Acción realizada</th>
+                <th scope="col">Usuario</th>
+
+            </tr>
+        </thead>
+        <tbody>
+    
+            {% for pet in  pet_history%}
+            
+            <tr>
+                <th scope="row">{{pet.history_id}}</th>
+                <td>  {{pet.name}}</td>
+                <td>{{pet.history_date}}</td>
+                <td>
+                    
+                    {% if pet.history_type == "+" %}
+                        Creado
+                    {% elif pet.history_type == "-"%}
+                        Eliminado
+                    {% else %}
+                        Modificado
+                    {% endif %}  
+                
+                </td>
+                <td>{{pet.history_user}}</td>
+            </tr>
+    
+            {% endfor %}
+    
+            
+        </tbody>
+      </table>
+    </div>
+
+
+        
+{% endblock %}

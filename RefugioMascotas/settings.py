@@ -46,8 +46,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'AppRefugioMascotas.apps.ApprefugiomascotasConfig',
-    "captcha"
-    
+    "captcha",
+    "django_bootstrap5",
+    "crispy_forms",
+    'import_export',
+    'simple_history',
+    'user_visit',
+
 ]
 
 MIDDLEWARE = [
@@ -58,6 +63,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
+    'user_visit.middleware.UserVisitMiddleware',
 ]
 
 ROOT_URLCONF = 'RefugioMascotas.urls'
@@ -105,6 +112,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+        'min_length': 12,
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -123,9 +133,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Guatemala'
 
 USE_I18N = True
 
@@ -134,6 +144,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 STATIC_URL = 'static/'
 MEDIA_URL = 'media/'
@@ -152,7 +164,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'AppRefugioMascotas.User'
 
 
-
+IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
@@ -160,3 +172,15 @@ EMAIL_PORT = 587
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'refugio.mascotas.2619@gmail.com'
 EMAIL_HOST_PASSWORD = 'MLYE7M3m'
+
+BOOTSTRAP5 = {
+
+
+    # Set placeholder attributes to label if no placeholder is provided.
+    'set_placeholder': False,
+
+  
+}
+
+
+

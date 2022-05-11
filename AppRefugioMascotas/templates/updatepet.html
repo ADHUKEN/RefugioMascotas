@@ -3,8 +3,9 @@
 {% block content%}
 
 
+{% load django_bootstrap5 %}
 
-
+{% load crispy_forms_tags %}
 <div class="shadow p-3 mb-5 bg-body rounded center-form">
     <h1>Editar mascota</h1>
 
@@ -12,7 +13,7 @@
        
         {% csrf_token %}
         
-        {{form.as_p }}
+        {{ form|crispy }}
     </br>
         <button type="submit" class="btn btn-primary form-control">Submit</button>
     </form>

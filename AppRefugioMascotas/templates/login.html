@@ -2,19 +2,34 @@
 {% extends 'base.html'%}
 {% block content%}
 
+<style>
+
+  
+    body{
+      background-image: url("https://w.wallhaven.cc/full/zx/wallhaven-zxdl2v.jpg");
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: cover;
+    }
+  
+  
+  </style>
+
+
 <div class="shadow p-3 mb-5 bg-body rounded center-form">
     <h1>LOGIN</h1>
     <form action="" method="POST" >
         {% csrf_token %}
         <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label">User</label>
+            <label for="exampleInputEmail1" class="form-label">Usuario</label>
             <input type="text" class="form-control" name="userTextbox" aria-describedby="emailHelp">
         </div>
         <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label">Password</label>
+            <label for="exampleInputPassword1" class="form-label">Contraseña</label>
             <input type="password" class="form-control" name="passwordTextbox">
         </div>
-        <button type="submit" class="btn btn-primary form-control">Submit</button>
+        <button type="submit" class="btn btn-primary form-control">Login</button>
     </form>
     <a href="{% url 'password_reset' %}">¿Olvidaste tu cotraseña?</a>
 

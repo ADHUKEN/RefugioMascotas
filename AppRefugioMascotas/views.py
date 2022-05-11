@@ -4,7 +4,7 @@ from email.policy import default
 from genericpath import exists
 import django
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login,logout ,get_user_model
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
@@ -21,14 +21,34 @@ from scipy.misc import face
 from .models import Pets, User, Adoption, FailedLogin
 
 from .forms import RegisterUserForm, addPetForm , adoptionForm, captchaform, verifyUser
+from django.http import FileResponse
+from io import StringIO, BytesIO
+from xhtml2pdf import pisa
+import csv
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
+from django.template import Context
+from django.template.loader import get_template
+from django.core.paginator import Paginator
 
 
 from .FaceDeteccion.FaceDeteccion  import CAPTURANDO , ENTRENANDO,RECONOCIENDO 
+
+from django.http import StreamingHttpResponse
+import cv2
+import threading
+import os
+
+
+
 # Create your views here.
 User = get_user_model()
 
+
+
 def home(request):
-    return render(request, 'index.html')
+	return render(request, 'index.html')
 
 def loginUser( request):
     if request.method == "POST":
@@ -82,9 +102,12 @@ def verify(request):
                 
         if form.is_valid():
             ENTRENANDO(user.username)
-            RECONOCIENDO()
-            login(request,user)
+            if RECONOCIENDO():
+                login(request,user)
+            else:
+                messages.success(request, "No se pudo reconocer tu rostro")
             return redirect('Inicio')
+                
             
     return render(request, 'verifyUser.html', {'form':form,})
     
@@ -121,7 +144,7 @@ def captcha(request):
 
 
 def viewPet(request):
-    pet_list = Pets.objects.all()
+    pet_list = Pets.objects.all().order_by('name')
     return render(request, 'viewpet.html', {'pet_list':pet_list})
 
 
@@ -154,6 +177,36 @@ def deletePet(request, pet_id):
     return redirect('viewPet')
 
 
+def petPdf(request):
+   pet_list = Pets.objects.all().order_by('name')
+   user = request.user
+
+   template_path = 'petpdf.html'
+   context = {'pet_list': pet_list, 'user': user}
+   # Create a Django response object, and specify content_type as pdf
+   response = HttpResponse(content_type='application/pdf')
+
+   # to directly download the pdf we need attachment 
+   # response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+
+   # to view on browser we can remove attachment 
+   response['Content-Disposition'] = 'filename="report.pdf"'
+
+   # find the template and render it.
+   template = get_template(template_path)
+   html = template.render(context)
+
+   # create a pdf
+   pisa_status = pisa.CreatePDF(
+      html, dest=response)
+   # if error then show some funy view
+   if pisa_status.err:
+      return HttpResponse('Ha habido un error <pre>' + html + '</pre>')
+   return response
+
+
+
+
 def viewClient(request):
     user = request.user
     if user.is_authenticated and user.is_superuser :
@@ -183,6 +236,31 @@ def updateProfile(request, Profile_id):
     
     return render(request, 'updateProfile.html', {'Profile':Profile, 'form':form})
 
+def userPdf(request):
+   user_list = User.objects.all()
+
+   template_path = 'userpdf.html'
+   context = {'user_list': user_list}
+   # Create a Django response object, and specify content_type as pdf
+   response = HttpResponse(content_type='application/pdf')
+
+   # to directly download the pdf we need attachment 
+   # response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+
+   # to view on browser we can remove attachment 
+   response['Content-Disposition'] = 'filename="report.pdf"'
+
+   # find the template and render it.
+   template = get_template(template_path)
+   html = template.render(context)
+
+   # create a pdf
+   pisa_status = pisa.CreatePDF(
+      html, dest=response)
+   # if error then show some funy view
+   if pisa_status.err:
+      return HttpResponse('Ha habido un error <pre>' + html + '</pre>')
+   return response
 
 def adoptionRequest(request):
     submitted = False
@@ -217,3 +295,68 @@ def updateAdoption(request, Adoption_id):
         return redirect('viewAdoption')
     
     return render(request, 'updateAdoption.html', {'adoption':adoption, 'form':form})
+
+
+def adoptionPdf(request):
+   adoption_list = Adoption.objects.all()
+
+   template_path = 'adoptionpdf.html'
+   context = {'adoption_list': adoption_list}
+   # Create a Django response object, and specify content_type as pdf
+   response = HttpResponse(content_type='application/pdf')
+
+   # to directly download the pdf we need attachment 
+   # response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+
+   # to view on browser we can remove attachment 
+   response['Content-Disposition'] = 'filename="report.pdf"'
+
+   # find the template and render it.
+   template = get_template(template_path)
+   html = template.render(context)
+
+   # create a pdf
+   pisa_status = pisa.CreatePDF(
+      html, dest=response)
+   # if error then show some funy view
+   if pisa_status.err:
+      return HttpResponse('Ha habido un error <pre>' + html + '</pre>')
+   return response
+
+def acctionsHistoryPets(request):
+    pet_history = Pets.history.all()
+
+
+    return render(request, 'acctionshistorypets.html', {'pet_history':pet_history})
+
+def acctionsHistoryAdoptions(request):
+    adoption_history = Adoption.history.all()
+
+    return render(request, 'acctionshistoryadoptions.html', {'adoption_history':adoption_history})
+
+def acctionsHistoryPdf(request):
+   pet_history = Pets.history.all()
+   adoption_history = Adoption.history.all()
+
+   template_path = 'acctionshistorypdf.html'
+   context = {'pet_history': pet_history, 'adoption_history':adoption_history}
+   # Create a Django response object, and specify content_type as pdf
+   response = HttpResponse(content_type='application/pdf')
+
+   # to directly download the pdf we need attachment 
+   # response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+
+   # to view on browser we can remove attachment 
+   response['Content-Disposition'] = 'filename="report.pdf"'
+
+   # find the template and render it.
+   template = get_template(template_path)
+   html = template.render(context)
+
+   # create a pdf
+   pisa_status = pisa.CreatePDF(
+      html, dest=response)
+   # if error then show some funy view
+   if pisa_status.err:
+      return HttpResponse('Ha habido un error <pre>' + html + '</pre>')
+   return response

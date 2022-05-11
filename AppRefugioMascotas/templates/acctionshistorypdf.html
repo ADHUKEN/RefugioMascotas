@@ -1,0 +1,112 @@
+<!DOCTYPE >
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mascotas disponibles</title>
+        <style type="text/css">
+            body {
+                font-weight: 200;
+                font-size: 14px;
+            }
+            .header {
+                font-size: 20px;
+                font-weight: 100;
+                text-align: center;
+                color: #007cae;
+            }
+            .title {
+                font-size: 22px;
+                font-weight: 100;
+               /* text-align: right;*/
+               padding: 10px 20px 0px 20px;  
+            }
+            .title span {
+                color: #007cae;
+            }
+            .details {
+                border: 1px solid #dddddd;
+                padding: 5px 5px 0px 20px;
+                text-align: left !important;
+                /*margin-left: 40%;*/
+            }
+            .hrItem {
+                border: none;
+                height: 1px;
+                /* Set the hr color */
+                color: #333; /* old IE */
+                background-color: #fff; /* Modern Browsers */
+            }
+            img {
+                height: 250px;
+            }
+
+
+        </style>
+    </head>
+    <body>
+        <div class='wrapper'>
+            <div class='header'>
+                <p class='title'>Acciones Realizadas</p>
+            </div>
+        <div>
+ 
+            <h2>Mascotas</h2>
+            {% for pet in  pet_history%}
+
+            <div class='details'>
+
+            <table >
+                <tr><td><strong> id:          </strong></td><td>    {{pet.history_id}}      </td></tr>    
+                <tr><td><strong> Nombre:           </strong></td><td>    {{pet.name}}         </td></tr>
+                <tr><td><strong> Fecha:             </strong></td><td>    {{pet.history_date}}          </td></tr>
+                <tr><td><strong> Tipo de accion:             </strong></td><td>  {% if pet.history_type == "+" %}
+                                                                            Creado
+                                                                        {% elif pet.history_type == "-"%}
+                                                                            Eliminado
+                                                                        {% else %}
+                                                                            Modificado
+                                                                        {% endif %}       </td></tr>    
+                <tr><td><strong> Usuario:             </strong></td><td>    {{pet.history_user}}          </td></tr>
+
+    
+           </table>
+           <hr class='hrItem' />
+
+            </div>
+
+
+            {% endfor %}
+
+
+            <h2>Adopciones</h2>
+            {% for adoption in  adoption_history%}
+
+            <div class='details'>
+
+            <table >
+                <tr><td><strong> id:          </strong></td><td>    {{adoption.history_id}}      </td></tr>    
+                <tr><td><strong> Nombre:           </strong></td><td>    {{adoption.user}}         </td></tr>
+                <tr><td><strong> Fecha:             </strong></td><td>    {{adoption.history_date}}          </td></tr>
+                <tr><td><strong> Tipo de accion:             </strong></td><td>  {% if adoption.history_type == "+" %}
+                                                                            Creado
+                                                                        {% elif adoption.history_type == "-"%}
+                                                                            Eliminado
+                                                                        {% else %}
+                                                                            Modificado
+                                                                        {% endif %}       </td></tr>    
+                <tr><td><strong> Usuario:             </strong></td><td>    {{adoption.history_user}}          </td></tr>
+
+    
+           </table>
+           <hr class='hrItem' />
+
+            </div>
+
+
+            {% endfor %}
+    </div>
+    </body>
+</html>
+

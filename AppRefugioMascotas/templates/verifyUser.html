@@ -29,12 +29,11 @@
         <span class="visually-hidden">Loading...</span>
       </div>
     <form action="" method="POST" enctype="multipart/form-data">
-       
-        {% csrf_token %}
-        
-        {{form.as_p }}
+      {% csrf_token %}
+      
+      {{form.as_p }}
     </br>
-        <button type="submit" class="btn btn-primary">Iniciar</button>
+    <button type="submit" class="btn btn-primary">Iniciar</button>
     </form>
 </div>
 {% endblock %}

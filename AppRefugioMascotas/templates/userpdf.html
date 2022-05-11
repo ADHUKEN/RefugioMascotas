@@ -1,0 +1,79 @@
+<!DOCTYPE >
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Usuarios Registrados</title>
+        <style type="text/css">
+            body {
+                font-weight: 200;
+                font-size: 14px;
+            }
+            .header {
+                font-size: 20px;
+                font-weight: 100;
+                text-align: center;
+                color: #007cae;
+            }
+            .title {
+                font-size: 22px;
+                font-weight: 100;
+               /* text-align: right;*/
+               padding: 10px 20px 0px 20px;  
+            }
+            .title span {
+                color: #007cae;
+            }
+            .details {
+                border: 1px solid #dddddd;
+                padding: 5px 5px 0px 20px;
+                text-align: left !important;
+                /*margin-left: 40%;*/
+            }
+            .hrItem {
+                border: none;
+                height: 1px;
+                /* Set the hr color */
+                color: #333; /* old IE */
+                background-color: #fff; /* Modern Browsers */
+            }
+            img {
+                height: 250px;
+            }
+
+
+        </style>
+    </head>
+    <body>
+        <div class='wrapper'>
+            <div class='header'>
+                <p class='title'>Usuarios registrados </p>
+            </div>
+        <div>
+
+            {% for user in  user_list%}
+
+            <div class='details'>
+
+            <table >
+                <tr><td><strong> Nombre de Usuario:          </strong></td><td>    {{user.username}}      </td></tr>    
+                <tr><td><strong> Nombre:           </strong></td><td>    {{user.first_name}}         </td></tr>
+                <tr><td><strong> Apellido:             </strong></td><td>    {{user.last_name}}          </td></tr>
+                <tr><td><strong> Email:             </strong></td><td>    {{user.email}}        </td></tr>    
+                <tr><td><strong> Superusuario:     </strong></td><td>    {{user.is_superuser}}          </td></tr>
+                <tr><td><strong> Colaborador:      </strong></td><td>    {{user.is_staff}}        </td></tr>    
+                <tr><td><strong> Activo:           </strong></td><td>    {{user.is_active}}          </td></tr>   
+           </table>
+
+                <img src="media/{{user.image}}"  >
+                <hr class='hrItem' />
+            </div>
+
+
+            {% endfor %}
+
+    </div>
+    </body>
+</html>
+

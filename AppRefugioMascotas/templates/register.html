@@ -4,16 +4,33 @@
 
 
 
+{% load django_bootstrap5 %}
+
+<style>
+
+  
+  body{
+    background-image: url("https://w.wallhaven.cc/full/qd/wallhaven-qdq3vl.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+  }
+
+
+</style>
+
 
 <div class="shadow p-3 mb-5 bg-body rounded center-form">
+
     <h1>REGISTER</h1>
-    <form action="{% url 'register' %}" method="POST" enctype="multipart/form-data">
+    <form action="{% url 'register' %}" method="POST"  enctype="multipart/form-data">
        
-        {% csrf_token %}
+      {% csrf_token %}
+      
+        {% bootstrap_form form %}
+
         
-        {{form.as_p }}
-
-
       <div class="alert alert-primary" role="alert">
         <strong>Recuerda!</strong> Cuando hagas click en registrar se iniciará el reconocimiento de cara, asegurate de acercarte bien a la cámara
       </div>
